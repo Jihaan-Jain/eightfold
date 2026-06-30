@@ -1,0 +1,46 @@
+# =============================================================
+# recruiter_view.yaml — Output schema for recruiters
+# =============================================================
+# Lightweight schema: name, contact, skills, headline,
+# confidence. Drops experience, education, provenance.
+# Skills are flattened to canonical name strings.
+# =============================================================
+
+version: "1.0"
+include_confidence: true
+include_provenance: false
+include_quality_metrics: false
+missing_field_strategy: "omit"
+
+fields:
+  - source: "full_name"
+    output: "name"
+    transform: "title"
+
+  - source: "emails"
+    output: "primary_email"
+    transform: "first"
+
+  - source: "phones"
+    output: "primary_phone"
+    transform: "first"
+
+  - source: "headline"
+    output: "headline"
+
+  - source: "location.city"
+    output: "city"
+
+  - source: "location.country"
+    output: "country"
+
+  - source: "years_experience"
+    output: "years_experience"
+    default: 0
+
+  - source: "skills"
+    output: "skills"
+    array_path: "normalized_name"
+
+  - source: "overall_confidence"
+    output: "profile_confidence"

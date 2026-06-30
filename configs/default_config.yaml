@@ -1,0 +1,164 @@
+# =============================================================
+# default_config.yaml
+# =============================================================
+# Default runtime configuration for the Candidate Data Transformer.
+#
+# Every setting here has a safe, production-ready default.
+# Override individual keys in environment-specific config files
+# (e.g., configs/dev_config.yaml, configs/prod_config.yaml).
+#
+# All values are validated against the Pydantic models in src/config.py
+# at startup. Invalid values cause a ConfigurationError before any
+# extraction begins.
+# =============================================================
+
+# -------------------------------------------------------------------
+# Logging
+# -------------------------------------------------------------------
+log_level: "INFO"     # DEBUG | INFO | WARNING | ERROR | CRITICAL
+debug_mode: false     # Set true in development for caller-info in logs
+
+# -------------------------------------------------------------------
+# Normalization Stage
+# -------------------------------------------------------------------
+normalization:
+  default_country_code: "IN"     # ISO 3166-1 alpha-2 fallback for phone normalizer
+  preferred_date_format: "%Y-%m-%d"  # Output date format (ISO 8601)
+  sbert_enabled: true            # Enable Stage 3 of skill pipeline (SBERT cosine)
+  rapidfuzz_threshold: 0.88      # Min fuzzy ratio for Stage 2 skill match
+  sbert_threshold: 0.82          # Min cosine similarity for Stage 3 skill match
+  normalise_company_suffixes: true  # Strip "Inc.", "LLC", "Ltd." from company names
+
+# -------------------------------------------------------------------
+# Identity Resolution Stage
+# -------------------------------------------------------------------
+# Signal weights MUST sum to exactly 1.0 — validated at startup.
+identity_resolution:
+  match_threshold: 0.85          # Score >= this → same candidate
+  review_threshold: 0.70         # Score < this → Human Approval Queue
+
+  # Composite score formula:
+  #   score = email*0.45 + phone*0.20 + name*0.15 + company*0.10 + location*0.10
+  email_weight: 0.45
+  phone_weight: 0.20
+  name_weight: 0.15
+  company_weight: 0.10
+  location_weight: 0.10
+
+# -------------------------------------------------------------------
+# Merge + Conflict Resolution Stage
+# -------------------------------------------------------------------
+merge:
+  strategy: "source_priority"    # source_priority | majority_vote | most_recent | manual
+  store_merge_decisions: true    # Store ExplainableMergeDecision for every conflict
+  human_approval_enabled: false  # Set true to enable Human Approval Queue
+
+# -------------------------------------------------------------------
+# Confidence Scoring Stage
+# -------------------------------------------------------------------
+confidence:
+  method: "multi_source_agreement"
+  freshness_half_life_days: 180   # Days until freshness score reaches 0.0
+  compute_quality_metrics: true   # Compute all 5-axis quality metrics
+
+# -------------------------------------------------------------------
+# Validation Stage
+# -------------------------------------------------------------------
+validation:
+  max_string_length: 2048
+  max_skills_count: 200
+  rules:
+    - rule_id: "email_format"
+      mode: "error"              # Block candidate if email is malformed
+    - rule_id: "graduation_not_future"
+      mode: "error"              # Block if graduation date is in the future
+    - rule_id: "experience_dates_ordered"
+      mode: "warning"            # Warn but allow overlapping experience dates
+    - rule_id: "low_completeness"
+      mode: "warning"            # Warn if completeness < 0.40
+
+# -------------------------------------------------------------------
+# Output Stage
+# -------------------------------------------------------------------
+output:
+  destination: "data/output"
+  errors_destination: "data/output/errors"
+  format: "json"                 # json | jsonl
+  pretty_print: false
+
+  # Output schema — controls which fields are included in final JSON.
+  # Change the `name` field to switch to a different schema file.
+  projection:
+    name: "full_profile"
+    include_confidence: true
+    include_provenance: false
+    include_merge_decisions: false
+    fields:
+      # ── Core identity ──────────────────────────────────────────
+      - canonical_name: "full_name"
+        output_name: "name"
+        required: true
+        missing_strategy: "error"
+
+      - canonical_name: "emails"
+        output_name: "emails"
+        required: true
+        missing_strategy: "error"
+
+      - canonical_name: "phones"
+        output_name: "phones"
+        required: false
+        missing_strategy: "null"
+
+      # ── Location ───────────────────────────────────────────────
+      - canonical_name: "location"
+        output_name: "location"
+        required: false
+        missing_strategy: "null"
+
+      # ── Professional summary ───────────────────────────────────
+      - canonical_name: "headline"
+        output_name: "headline"
+        required: false
+        missing_strategy: "null"
+
+      - canonical_name: "years_experience"
+        output_name: "years_experience"
+        required: false
+        missing_strategy: "null"
+
+      # ── Skills ────────────────────────────────────────────────
+      - canonical_name: "skills"
+        output_name: "skills"
+        flatten_path: "name"          # Flatten List[Skill] → List[str]
+        required: false
+        missing_strategy: "null"
+
+      # ── Work history ──────────────────────────────────────────
+      - canonical_name: "experience"
+        output_name: "experience"
+        required: false
+        missing_strategy: "null"
+
+      # ── Education ─────────────────────────────────────────────
+      - canonical_name: "education"
+        output_name: "education"
+        required: false
+        missing_strategy: "null"
+
+      # ── Links ─────────────────────────────────────────────────
+      - canonical_name: "links"
+        output_name: "links"
+        required: false
+        missing_strategy: "null"
+
+      # ── Quality metrics ───────────────────────────────────────
+      - canonical_name: "quality.overall_confidence"
+        output_name: "profile_confidence"
+        required: false
+        missing_strategy: "null"
+
+      - canonical_name: "quality.completeness"
+        output_name: "completeness"
+        required: false
+        missing_strategy: "null"

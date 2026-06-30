@@ -1,0 +1,73 @@
+{
+  "statistics": {
+    "total": 4,
+    "valid": 4,
+    "invalid": 0,
+    "with_warnings": 1,
+    "pass_rate": 1.0,
+    "error_count": 0,
+    "warning_count": 2,
+    "top_violations": [
+      [
+        "min_confidence",
+        1
+      ],
+      [
+        "primary_email_present",
+        1
+      ]
+    ],
+    "elapsed_ms": 0.39
+  },
+  "validated_at": "2026-06-30T19:13:40.307678+00:00",
+  "candidate_results": {
+    "64cb52f4-15c2-487f-b35a-2372284b759a": {
+      "valid": true,
+      "issues": []
+    },
+    "93337e00-c552-459a-bcb2-5ed2bb27ad5d": {
+      "valid": true,
+      "issues": []
+    },
+    "b8b9bfd7-3967-495e-baed-002e91944add": {
+      "valid": true,
+      "issues": []
+    },
+    "161cebc1-6cf7-4c9f-850f-0925f69e261e": {
+      "valid": true,
+      "issues": [
+        {
+          "field": "overall_confidence",
+          "rule": "min_confidence",
+          "message": "overall_confidence 0.041 is below minimum 0.200.",
+          "severity": "warning",
+          "actual_value": "0.0409"
+        },
+        {
+          "field": "emails",
+          "rule": "primary_email_present",
+          "message": "No email address found for this candidate.",
+          "severity": "warning",
+          "actual_value": null
+        }
+      ]
+    }
+  },
+  "errors": [],
+  "warnings": [
+    {
+      "field": "overall_confidence",
+      "rule": "min_confidence",
+      "message": "overall_confidence 0.041 is below minimum 0.200.",
+      "severity": "warning",
+      "actual_value": "0.0409"
+    },
+    {
+      "field": "emails",
+      "rule": "primary_email_present",
+      "message": "No email address found for this candidate.",
+      "severity": "warning",
+      "actual_value": null
+    }
+  ]
+}

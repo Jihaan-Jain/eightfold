@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design — Multi-Source Candidate Data Transformer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+@page { size: A4 portrait; margin: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #0d1117;
+  --surface:   #161b22;
+  --surface2:  #1c2128;
+  --border:    #21262d;
+  --accent:    #58a6ff;
+  --accent2:   #1f6feb;
+  --green:     #3fb950;
+  --amber:     #e3b341;
+  --muted:     #8b949e;
+  --bright:    #f0f6fc;
+  --body:      #c9d1d9;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--body);
+  width: 794px;
+  height: 750px;
+  overflow: hidden;
+  padding: 14px 26px 10px;
+  font-size: 7.4px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── HEADER ─────────────────────────────────────────── */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 6px;
+}
+.h-left .eyebrow {
+  font-size: 6px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 3px;
+}
+.h-left h1 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--bright);
+  letter-spacing: -0.4px;
+  line-height: 1.05;
+}
+.h-left .byline {
+  font-size: 6.8px;
+  color: var(--muted);
+  margin-top: 3px;
+}
+.h-right {
+  text-align: right;
+  max-width: 270px;
+}
+.h-right .ps-label {
+  font-size: 5.8px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  margin-bottom: 3px;
+}
+.h-right .ps-text {
+  font-size: 7.2px;
+  color: var(--bright);
+  font-style: italic;
+  line-height: 1.5;
+}
+
+/* ─── BODY GRID ───────────────────────────────────────── */
+.body {
+  display: grid;
+  grid-template-columns: 178px 1fr;
+  gap: 9px;
+  height: 590px;
+}
+
+/* ─── LEFT: PIPELINE ──────────────────────────────────── */
+.left-col {
+  display: flex;
+  flex-direction: column;
+}
+.col-label {
+  font-size: 5.8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--muted);
+  margin-bottom: 5px;
+}
+.diagram {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 9px 7px 9px 8px;
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* sources row */
+.sources {
+  display: flex;
+  gap: 3px;
+  margin-bottom: 5px;
+  width: 120px;
+}
+.src {
+  flex: 1;
+  text-align: center;
+  font-size: 5.8px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 2px 0;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--muted);
+  letter-spacing: 0.5px;
+}
+
+/* arrow */
+.arr {
+  font-size: 9px;
+  color: var(--accent2);
+  line-height: 1;
+  margin: 1.5px 0 1.5px 52px;
+}
+
+/* stage box */
+.stage {
+  width: 121px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  border-left: 2.5px solid var(--accent2);
+  background: var(--surface2);
+  padding: 3.5px 6px;
+  margin-bottom: 1px;
+}
+.stage.em { border-left-color: var(--green); }
+.stage-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7px;
+  font-weight: 600;
+  color: var(--bright);
+}
+.stage-sub {
+  font-size: 5.6px;
+  color: var(--muted);
+  margin-top: 1px;
+}
+
+/* output box */
+.out-box {
+  width: 121px;
+  border-radius: 4px;
+  border: 1px solid rgba(63,185,80,0.35);
+  background: rgba(63,185,80,0.07);
+  padding: 3.5px 6px;
+  margin-top: 3px;
+}
+.out-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7px;
+  font-weight: 600;
+  color: var(--green);
+}
+.out-sub { font-size: 5.6px; color: var(--muted); margin-top: 1px; }
+
+/* cross-cutting rail */
+.rail {
+  position: absolute;
+  right: 7px;
+  top: 9px;
+  bottom: 9px;
+  width: 40px;
+  display: flex;
+  flex-direction: column;
+}
+.rail-hdr {
+  font-size: 5.4px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+  margin-bottom: 4px;
+  text-align: center;
+}
+.rail-item {
+  font-size: 5.5px;
+  color: var(--accent);
+  text-align: center;
+  padding: 3px 2px;
+  border: 1px solid rgba(88,166,255,0.2);
+  background: rgba(88,166,255,0.07);
+  border-radius: 3px;
+  margin-bottom: 3px;
+  line-height: 1.3;
+}
+
+/* ─── RIGHT COL ───────────────────────────────────────── */
+.right-col {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: 7px;
+}
+
+/* flow table */
+.flow-wrap {}
+.flow-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 6.9px;
+}
+.flow-table th {
+  font-size: 5.6px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--muted);
+  text-align: left;
+  padding: 0 5px 4px;
+  border-bottom: 1px solid var(--border);
+}
+.flow-table td {
+  padding: 2.8px 5px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.flow-table tr:last-child td { border-bottom: none; }
+.sn {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  color: var(--accent);
+  white-space: nowrap;
+  font-size: 6.8px;
+}
+.sio {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 5.8px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.sd { font-size: 6.8px; color: var(--body); }
+
+/* mid cards */
+.mid-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+}
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 7px 9px;
+}
+.card-hdr {
+  font-size: 5.8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.8px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+/* identity signals */
+.sig-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px;
+  margin-bottom: 5px;
+}
+.sig {
+  font-size: 6.2px;
+  font-weight: 600;
+  padding: 2.5px 4px;
+  border-radius: 3px;
+  text-align: center;
+}
+.sig.hard { color: var(--accent); background: rgba(88,166,255,0.1); border: 1px solid rgba(88,166,255,0.22); }
+.sig.soft { color: var(--amber); background: rgba(227,179,65,0.1);  border: 1px solid rgba(227,179,65,0.22); }
+.sig-divider {
+  font-size: 5.6px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 3px 0;
+}
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin-top: 2px;
+}
+.pill {
+  font-size: 5.6px;
+  font-weight: 600;
+  padding: 2px 5px;
+  border-radius: 10px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+.sbert-note {
+  font-size: 5.8px;
+  color: var(--muted);
+  margin-top: 5px;
+  line-height: 1.4;
+}
+.sbert-note span { color: var(--body); }
+
+/* quality metrics */
+.metric-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2.8px 0;
+  border-bottom: 1px solid var(--border);
+}
+.metric-row:last-child { border-bottom: none; }
+.m-name { font-size: 7px; color: var(--bright); }
+.m-formula { font-size: 5.8px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+
+/* bottom row */
+.bottom-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 7px;
+  align-items: start;
+}
+
+/* principles */
+.check-list { display: flex; flex-direction: column; gap: 3.5px; }
+.check-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 6.8px;
+  color: var(--bright);
+}
+.ck { color: var(--green); font-weight: 700; font-size: 8px; }
+
+/* design decisions */
+.dd-list { display: flex; flex-direction: column; gap: 4px; }
+.dd-item {
+  padding-left: 7px;
+  border-left: 2px solid var(--accent2);
+}
+.dd-title { font-size: 6.8px; color: var(--bright); line-height: 1.35; }
+.dd-why { font-size: 5.8px; color: var(--muted); margin-top: 1px; line-height: 1.35; }
+
+/* production + scale stacked */
+.prod-scale { display: flex; flex-direction: column; gap: 6px; }
+.prod-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; }
+.prod-item {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 6.4px;
+  color: var(--muted);
+}
+.dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+.scale-point {
+  font-size: 6.4px;
+  color: var(--body);
+  line-height: 1.5;
+}
+.scale-point .arrow { color: var(--accent); }
+
+/* ─── FOOTER ──────────────────────────────────────────── */
+footer {
+  border-top: 1px solid var(--border);
+  padding-top: 7px;
+  margin-top: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.footer-quote {
+  font-size: 7px;
+  font-style: italic;
+  color: var(--muted);
+  letter-spacing: 0.2px;
+}
+.footer-meta {
+  font-size: 6.2px;
+  color: var(--muted);
+  text-align: right;
+  line-height: 1.6;
+}
+.footer-meta .hi { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══════════════════════════════════════════════════════ -->
+<header>
+  <div class="h-left">
+    <div class="eyebrow">Engineering Design Review · Eightfold AI</div>
+    <h1>Multi-Source Candidate Data Transformer</h1>
+    <div class="byline">Jihaan Jain &nbsp;·&nbsp; Internship Assignment &nbsp;·&nbsp; Jul–Dec 2026</div>
+  </div>
+  <div class="h-right">
+    <div class="ps-label">Problem Statement</div>
+    <div class="ps-text">
+      Recruiter tooling produces conflicting, duplicate candidate records<br>
+      across CSV exports, ATS blobs, résumés, and GitHub. This system<br>
+      resolves identity and emits one canonical, confidence-scored profile.
+    </div>
+  </div>
+</header>
+
+<!-- ══ BODY ════════════════════════════════════════════════════════ -->
+<div class="body">
+
+  <!-- ── LEFT: PIPELINE DIAGRAM ─────────────────────────────── -->
+  <div class="left-col">
+    <div class="col-label">Pipeline Architecture</div>
+    <div class="diagram">
+
+      <!-- Sources -->
+      <div class="sources">
+        <div class="src">CSV</div>
+        <div class="src">ATS</div>
+        <div class="src">PDF</div>
+        <div class="src">GH</div>
+      </div>
+
+      <div class="arr">↓</div>
+      <div class="stage">
+        <div class="stage-name">EXTRACTION</div>
+        <div class="stage-sub">BaseExtractor · Factory auto-select</div>
+      </div>
+
+      <div class="arr">↓</div>
+      <div class="stage">
+        <div class="stage-name">MAPPING</div>
+        <div class="stage-sub">FieldRegistry · alias resolution</div>
+      </div>
+
+      <div class="arr">↓</div>
+      <div class="stage">
+        <div class="stage-name">NORMALIZATION</div>
+        <div class="stage-sub">9 stateless normalizers in sequence</div>
+      </div>
+
+      <div class="arr">↓</div>
+      <div class="stage em">
+        <div class="stage-name">IDENTITY RESOLUTION</div>
+        <div class="stage-sub">Union-Find · hard + soft signals</div>
+      </div>
+
+      <div class="arr">↓</div>
+      <div class="stage em">
+        <div class="stage-name">MERGE ENGINE</div>
+        <div class="stage-sub">ConflictResolver · union-dedup lists</div>
+      </div>
+
+      <div class="arr">↓</div>
+      <div class="stage">
+        <div class="stage-name">CONFIDENCE ENGINE</div>
+        <div class="stage-sub">5-axis QualityMetrics per profile</div>
+      </div>
+
+      <div class="arr">↓</div>
+      <div class="stage">
+        <div class="stage-name">PROJECTION</div>
+        <div class="stage-sub">Runtime YAML/JSON output schema</div>
+      </div>
+
+      <div class="arr">↓</div>
+      <div class="stage">
+        <div class="stage-name">VALIDATION</div>
+        <div class="stage-sub">Schema + 12 business rules</div>
+      </div>
+
+      <div class="arr">↓</div>
+      <div class="out-box">
+        <div class="out-name">JSON OUTPUT</div>
+        <div class="out-sub">CandidateProfile[] + ValidationReport</div>
+      </div>
+
+      <!-- Cross-cutting concerns rail -->
+      <div class="rail">
+        <div class="rail-hdr">Cross-Cutting</div>
+        <div class="rail-item">Structured<br>Logging</div>
+        <div class="rail-item">Provenance<br>Chain</div>
+        <div class="rail-item">Config-<br>Driven</div>
+        <div class="rail-item">Per-Record<br>Isolation</div>
+        <div class="rail-item">Strong<br>Typing</div>
+        <div class="rail-item">Exception<br>Hierarchy</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── RIGHT COL ──────────────────────────────────────────── -->
+  <div class="right-col">
+
+    <!-- SYSTEM FLOW TABLE -->
+    <div class="flow-wrap">
+      <div class="col-label">Stage Contract — Input · Method · Output</div>
+      <table class="flow-table">
+        <thead>
+          <tr>
+            <th style="width:80px">Stage</th>
+            <th style="width:140px">I → O</th>
+            <th>Decision / Mechanism</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="sn">Extraction</span></td>
+            <td><span class="sio">path | user → RawRecord[]</span></td>
+            <td><span class="sd">Factory selects extractor by extension / URL; per-record fault boundary</span></td>
+          </tr>
+          <tr>
+            <td><span class="sn">Mapping</span></td>
+            <td><span class="sio">RawRecord → CanonicalRecord</span></td>
+            <td><span class="sd">FieldRegistry is the single alias source; no hardcoded field names in any mapper</span></td>
+          </tr>
+          <tr>
+            <td><span class="sn">Normalization</span></td>
+            <td><span class="sio">CanonicalRecord → CanonicalRecord</span></td>
+            <td><span class="sd">Email (RFC), Phone (E.164), Date (YYYY-MM), Country (ISO-3166), URL (https), Skills cascade</span></td>
+          </tr>
+          <tr>
+            <td><span class="sn">Identity Res.</span></td>
+            <td><span class="sio">CanonicalRecord[] → Group[]</span></td>
+            <td><span class="sd">Union-Find; email/phone/GitHub = hard (≥0.85 immediate); name+company/location = additive soft</span></td>
+          </tr>
+          <tr>
+            <td><span class="sn">Merge</span></td>
+            <td><span class="sio">Group[] → CandidateProfile[]</span></td>
+            <td><span class="sd">Scalars via ConflictResolver (4 modes); lists union-dedup by normalised key; years_exp = max()</span></td>
+          </tr>
+          <tr>
+            <td><span class="sn">Confidence</span></td>
+            <td><span class="sio">Profile → QualityMetrics</span></td>
+            <td><span class="sd">Per-field: source weight + count bonus ± agreement delta; aggregated across 5 axes</span></td>
+          </tr>
+          <tr>
+            <td><span class="sn">Projection</span></td>
+            <td><span class="sio">Profile → dict</span></td>
+            <td><span class="sd">Runtime YAML/JSON reshapes output; rename, transforms, array_path, conditional, omit/null/error</span></td>
+          </tr>
+          <tr>
+            <td><span class="sn">Validation</span></td>
+            <td><span class="sio">Profile + dict → Report</span></td>
+            <td><span class="sd">SchemaValidator (7 rules) + BusinessValidator (12 rules); pass-rate + violation ranking in report</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- MID ROW -->
+    <div class="mid-row">
+
+      <!-- IDENTITY & MERGE -->
+      <div class="card">
+        <div class="card-hdr">Identity &amp; Merge</div>
+        <div class="sig-divider">Hard signals — threshold ≥ 0.85, immediate merge</div>
+        <div class="sig-grid">
+          <div class="sig hard">✦ Email (exact)</div>
+          <div class="sig hard">✦ Phone E.164</div>
+          <div class="sig hard">✦ GitHub handle</div>
+          <div class="sig hard">✦ LinkedIn slug</div>
+        </div>
+        <div class="sig-divider">Soft signals — additive weighted score</div>
+        <div class="sig-grid">
+          <div class="sig soft">◈ Name + Company</div>
+          <div class="sig soft">◈ Name + Location</div>
+        </div>
+        <div class="pills" style="margin-top:5px;">
+          <div class="pill">Source Priority</div>
+          <div class="pill">Majority Vote</div>
+          <div class="pill">Most Recent</div>
+          <div class="pill">Manual Flag</div>
+        </div>
+        <div class="sbert-note">Skills: <span>ontology lookup → RapidFuzz ≥ 0.88 → SBERT (all-MiniLM-L6-v2) ≥ 0.82 → unresolved</span></div>
+      </div>
+
+      <!-- QUALITY METRICS -->
+      <div class="card">
+        <div class="card-hdr">5-Axis Quality Metrics</div>
+        <div class="metric-row">
+          <span class="m-name">Overall Confidence</span>
+          <span class="m-formula">Σ(field_conf × weight) / Σ(weight)</span>
+        </div>
+        <div class="metric-row">
+          <span class="m-name">Completeness</span>
+          <span class="m-formula">populated / expected fields</span>
+        </div>
+        <div class="metric-row">
+          <span class="m-name">Consistency</span>
+          <span class="m-formula">1.0 − min(1, violations × 0.15)</span>
+        </div>
+        <div class="metric-row">
+          <span class="m-name">Agreement</span>
+          <span class="m-formula">agreed / multi-source fields</span>
+        </div>
+        <div class="metric-row">
+          <span class="m-name">Freshness</span>
+          <span class="m-formula">e<sup>−λ·age</sup>, t½ = 180 days</span>
+        </div>
+        <div style="margin-top:5px;font-size:5.6px;color:var(--muted);">Source trust: ATS 0.90 · GitHub 0.85 · CSV 0.75 · Notes 0.65 · Résumé 0.60</div>
+      </div>
+
+    </div>
+
+    <!-- BOTTOM ROW -->
+    <div class="bottom-row">
+
+      <!-- CORE PRINCIPLES -->
+      <div class="card">
+        <div class="card-hdr">Engineering Principles</div>
+        <div class="check-list">
+          <div class="check-item"><span class="ck">✓</span>Deterministic Processing</div>
+          <div class="check-item"><span class="ck">✓</span>Explainable Merge Decisions</div>
+          <div class="check-item"><span class="ck">✓</span>Config-Driven Architecture</div>
+          <div class="check-item"><span class="ck">✓</span>Frozen Immutable Models</div>
+          <div class="check-item"><span class="ck">✓</span>Per-Record Fault Isolation</div>
+          <div class="check-item"><span class="ck">✓</span>Full Provenance Auditability</div>
+          <div class="check-item"><span class="ck">✓</span>Structured JSON Logging</div>
+          <div class="check-item"><span class="ck">✓</span>1,263 Tests · CI Enforced</div>
+        </div>
+      </div>
+
+      <!-- KEY DESIGN DECISIONS -->
+      <div class="card">
+        <div class="card-hdr">Key Design Decisions</div>
+        <div class="dd-list">
+          <div class="dd-item">
+            <div class="dd-title">CandidateProfile frozen; output schema separate</div>
+            <div class="dd-why">Projection reshapes without mutating the canonical record</div>
+          </div>
+          <div class="dd-item">
+            <div class="dd-title">Email is a hard signal — no weight accumulation</div>
+            <div class="dd-why">Emails are globally unique; one exact match is provably sufficient</div>
+          </div>
+          <div class="dd-item">
+            <div class="dd-title">SBERT scoped strictly to skill synonym resolution</div>
+            <div class="dd-why">Keeps merge path fully deterministic; non-reproducible embeddings isolated</div>
+          </div>
+          <div class="dd-item">
+            <div class="dd-title">FieldRegistry as single canonical field definition</div>
+            <div class="dd-why">All 4 mappers share one registry; new field = one-line change</div>
+          </div>
+          <div class="dd-item">
+            <div class="dd-title">Rule-based conflict resolution over learned ranking</div>
+            <div class="dd-why">Every merge decision is inspectable, reproducible, and debuggable</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRODUCTION + SCALABILITY -->
+      <div class="prod-scale">
+        <div class="card">
+          <div class="card-hdr">Production-Ready</div>
+          <div class="prod-grid">
+            <div class="prod-item"><div class="dot"></div>Pydantic v2 Models</div>
+            <div class="prod-item"><div class="dot"></div>Factory + Pipeline</div>
+            <div class="prod-item"><div class="dot"></div>Structured Logging</div>
+            <div class="prod-item"><div class="dot"></div>Exception Hierarchy</div>
+            <div class="prod-item"><div class="dot"></div>Runtime Projection</div>
+            <div class="prod-item"><div class="dot"></div>GitHub Actions CI</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hdr">Scalability Path</div>
+          <div class="scale-point">
+            Identity resolution is O(n²) — the sole bottleneck.<br>
+            <span class="arrow">→</span> Email-domain blocking cuts comparisons 10–100×<br>
+            <span class="arrow">→</span> All other stages are O(n), trivially parallelisable<br>
+            <span class="arrow">→</span> Stateless stages → queue / worker sharding ready<br>
+            <span class="arrow">→</span> SBERT lazy-loaded; GPU-acceleratable on demand
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,332 @@
+[
+  {
+    "candidate_id": "64cb52f4-15c2-487f-b35a-2372284b759a",
+    "full_name": "Priya Sharma",
+    "emails": [
+      "priya.sharma@gmail.com"
+    ],
+    "phones": [
+      "+919876543210"
+    ],
+    "location": {
+      "city": "Bangalore",
+      "state": null,
+      "country": "IN",
+      "country_code": "IN"
+    },
+    "headline": "Senior ML Engineer",
+    "skills": [
+      {
+        "name": "Python",
+        "normalized_name": "Python",
+        "aliases": [
+          "Python"
+        ],
+        "category": null,
+        "parent_domain": null,
+        "confidence": 0.8500000000000001,
+        "sources": [
+          "csv"
+        ],
+        "embedding_score": null
+      },
+      {
+        "name": "PyTorch",
+        "normalized_name": "PyTorch",
+        "aliases": [
+          "PyTorch"
+        ],
+        "category": null,
+        "parent_domain": null,
+        "confidence": 0.8500000000000001,
+        "sources": [
+          "csv"
+        ],
+        "embedding_score": null
+      },
+      {
+        "name": "SQL",
+        "normalized_name": "SQL",
+        "aliases": [
+          "SQL"
+        ],
+        "category": null,
+        "parent_domain": null,
+        "confidence": 0.8500000000000001,
+        "sources": [
+          "csv"
+        ],
+        "embedding_score": null
+      },
+      {
+        "name": "Kubernetes",
+        "normalized_name": "Kubernetes",
+        "aliases": [
+          "Kubernetes"
+        ],
+        "category": null,
+        "parent_domain": null,
+        "confidence": 0.8500000000000001,
+        "sources": [
+          "csv"
+        ],
+        "embedding_score": null
+      },
+      {
+        "name": "Machine Learning",
+        "normalized_name": "Machine Learning",
+        "aliases": [
+          "Machine Learning"
+        ],
+        "category": null,
+        "parent_domain": null,
+        "confidence": 0.8500000000000001,
+        "sources": [
+          "csv"
+        ],
+        "embedding_score": null
+      },
+      {
+        "name": "Deep Learning",
+        "normalized_name": "Deep Learning",
+        "aliases": [
+          "Deep Learning"
+        ],
+        "category": null,
+        "parent_domain": null,
+        "confidence": 0.8500000000000001,
+        "sources": [
+          "csv"
+        ],
+        "embedding_score": null
+      }
+    ],
+    "links": [
+      {
+        "platform": "github",
+        "url": "https://github.com/priya-sharma",
+        "verified": true
+      },
+      {
+        "platform": "linkedin",
+        "url": "https://linkedin.com/in/priya-sharma",
+        "verified": true
+      }
+    ],
+    "quality_metrics": {
+      "overall_confidence": 0.5799,
+      "completeness": 0.7,
+      "consistency": 1.0,
+      "agreement": 1.0,
+      "freshness": 1.0
+    },
+    "overall_confidence": 0.5799,
+    "created_at": "2026-06-30 19:13:40.282338+00:00",
+    "updated_at": "2026-06-30 19:13:40.282338+00:00"
+  },
+  {
+    "candidate_id": "93337e00-c552-459a-bcb2-5ed2bb27ad5d",
+    "full_name": "Rahul Verma",
+    "emails": [
+      "rahul.verma@outlook.com"
+    ],
+    "phones": [
+      "+918765432109"
+    ],
+    "location": {
+      "city": "Hyderabad",
+      "state": null,
+      "country": "IN",
+      "country_code": "IN"
+    },
+    "headline": "Software Engineer",
+    "skills": [
+      {
+        "name": "Java",
+        "normalized_name": "Java",
+        "aliases": [
+          "Java"
+        ],
+        "category": null,
+        "parent_domain": null,
+        "confidence": 0.8500000000000001,
+        "sources": [
+          "csv"
+        ],
+        "embedding_score": null
+      },
+      {
+        "name": "Go",
+        "normalized_name": "Go",
+        "aliases": [
+          "Go"
+        ],
+        "category": null,
+        "parent_domain": null,
+        "confidence": 0.8500000000000001,
+        "sources": [
+          "csv"
+        ],
+        "embedding_score": null
+      },
+      {
+        "name": "Kubernetes",
+        "normalized_name": "Kubernetes",
+        "aliases": [
+          "Kubernetes"
+        ],
+        "category": null,
+        "parent_domain": null,
+        "confidence": 0.8500000000000001,
+        "sources": [
+          "csv"
+        ],
+        "embedding_score": null
+      },
+      {
+        "name": "Google Cloud",
+        "normalized_name": "Google Cloud",
+        "aliases": [
+          "Google Cloud"
+        ],
+        "category": null,
+        "parent_domain": null,
+        "confidence": 0.8500000000000001,
+        "sources": [
+          "csv"
+        ],
+        "embedding_score": null
+      }
+    ],
+    "links": [
+      {
+        "platform": "linkedin",
+        "url": "https://linkedin.com/in/rahul-verma",
+        "verified": true
+      }
+    ],
+    "quality_metrics": {
+      "overall_confidence": 0.5558,
+      "completeness": 0.7,
+      "consistency": 1.0,
+      "agreement": 1.0,
+      "freshness": 1.0
+    },
+    "overall_confidence": 0.5558,
+    "created_at": "2026-06-30 19:13:40.283336+00:00",
+    "updated_at": "2026-06-30 19:13:40.283336+00:00"
+  },
+  {
+    "candidate_id": "b8b9bfd7-3967-495e-baed-002e91944add",
+    "full_name": "Aisha Khan",
+    "emails": [
+      "aisha.khan@yahoo.com"
+    ],
+    "location": {
+      "city": "Mumbai",
+      "state": null,
+      "country": "IN",
+      "country_code": "IN"
+    },
+    "headline": "Data Scientist",
+    "skills": [
+      {
+        "name": "Python",
+        "normalized_name": "Python",
+        "aliases": [
+          "Python"
+        ],
+        "category": null,
+        "parent_domain": null,
+        "confidence": 0.8500000000000001,
+        "sources": [
+          "csv"
+        ],
+        "embedding_score": null
+      },
+      {
+        "name": "scikit-learn",
+        "normalized_name": "scikit-learn",
+        "aliases": [
+          "scikit-learn"
+        ],
+        "category": null,
+        "parent_domain": null,
+        "confidence": 0.8500000000000001,
+        "sources": [
+          "csv"
+        ],
+        "embedding_score": null
+      },
+      {
+        "name": "TensorFlow",
+        "normalized_name": "TensorFlow",
+        "aliases": [
+          "TensorFlow"
+        ],
+        "category": null,
+        "parent_domain": null,
+        "confidence": 0.8500000000000001,
+        "sources": [
+          "csv"
+        ],
+        "embedding_score": null
+      },
+      {
+        "name": "SQL",
+        "normalized_name": "SQL",
+        "aliases": [
+          "SQL"
+        ],
+        "category": null,
+        "parent_domain": null,
+        "confidence": 0.8500000000000001,
+        "sources": [
+          "csv"
+        ],
+        "embedding_score": null
+      }
+    ],
+    "links": [
+      {
+        "platform": "github",
+        "url": "https://github.com/aisha-k",
+        "verified": true
+      },
+      {
+        "platform": "linkedin",
+        "url": "https://linkedin.com/in/aisha-khan",
+        "verified": true
+      }
+    ],
+    "quality_metrics": {
+      "overall_confidence": 0.4675,
+      "completeness": 0.6,
+      "consistency": 1.0,
+      "agreement": 1.0,
+      "freshness": 1.0
+    },
+    "overall_confidence": 0.4675,
+    "created_at": "2026-06-30 19:13:40.284332+00:00",
+    "updated_at": "2026-06-30 19:13:40.284332+00:00"
+  },
+  {
+    "candidate_id": "161cebc1-6cf7-4c9f-850f-0925f69e261e",
+    "location": {
+      "city": null,
+      "state": null,
+      "country": null,
+      "country_code": null
+    },
+    "quality_metrics": {
+      "overall_confidence": 0.0409,
+      "completeness": 0.1,
+      "consistency": 1.0,
+      "agreement": 1.0,
+      "freshness": 1.0
+    },
+    "overall_confidence": 0.0409,
+    "created_at": "2026-06-30 19:13:40.284332+00:00",
+    "updated_at": "2026-06-30 19:13:40.284332+00:00"
+  }
+]

@@ -1,0 +1,58 @@
+# =============================================================
+# ats_export.yaml — Output schema for ATS ingestion
+# =============================================================
+# Full structured profile for importing into an Applicant
+# Tracking System. Includes experience, education, all contact
+# details, and the quality metrics audit trail.
+# Skills returned as full objects (name + confidence + sources).
+# =============================================================
+
+version: "1.0"
+include_confidence: true
+include_provenance: true
+include_quality_metrics: true
+missing_field_strategy: "null"
+
+fields:
+  - source: "candidate_id"
+    output: "candidate_id"
+
+  - source: "full_name"
+    output: "full_name"
+
+  - source: "emails"
+    output: "emails"
+
+  - source: "phones"
+    output: "phones"
+
+  - source: "location"
+    output: "location"
+
+  - source: "headline"
+    output: "headline"
+
+  - source: "years_experience"
+    output: "years_experience"
+
+  - source: "skills"
+    output: "skills"
+    flatten: true
+
+  - source: "experience"
+    output: "experience"
+    flatten: true
+
+  - source: "education"
+    output: "education"
+    flatten: true
+
+  - source: "links"
+    output: "links"
+    flatten: true
+
+  - source: "overall_confidence"
+    output: "overall_confidence"
+
+  - source: "quality_metrics"
+    output: "quality_metrics"

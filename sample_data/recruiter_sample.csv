@@ -1,0 +1,5 @@
+First Name,Last Name,Email,Phone,LinkedIn,GitHub,Current Company,Current Title,Skills,Location,Years Experience,Notes
+Priya,Sharma,priya.sharma@gmail.com,+91 9876543210,linkedin.com/in/priya-sharma,github.com/priya-sharma,Eightfold AI,Senior ML Engineer,"Python, PyTorch, SQL, Kubernetes","Bangalore, India",6,Strong ML background
+Rahul,Verma,rahul.verma@outlook.com,+91 8765432109,linkedin.com/in/rahul-verma,,Google,Software Engineer,"Java, Go, Kubernetes, GCP","Hyderabad, India",4,
+Aisha,Khan,aisha.khan@yahoo.com,,linkedin.com/in/aisha-khan,github.com/aisha-k,Microsoft,Data Scientist,"Python, Scikit-learn, TensorFlow, SQL","Mumbai, India",3,Excellent communication
+priya.sharma@gmail.com,,priya.sharma@gmail.com,+919876543210,,,,,"ML, Deep Learning, SQL",,, Duplicate entry — same person as row 1

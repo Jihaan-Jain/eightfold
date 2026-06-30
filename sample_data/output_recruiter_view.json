@@ -1,0 +1,55 @@
+[
+  {
+    "name": "Priya Sharma",
+    "primary_email": "priya.sharma@gmail.com",
+    "primary_phone": "+919876543210",
+    "headline": "Senior ML Engineer",
+    "city": "Bangalore",
+    "country": "IN",
+    "years_experience": 0,
+    "skills": [
+      "Python",
+      "PyTorch",
+      "SQL",
+      "Kubernetes",
+      "Machine Learning",
+      "Deep Learning"
+    ],
+    "profile_confidence": 0.5799
+  },
+  {
+    "name": "Rahul Verma",
+    "primary_email": "rahul.verma@outlook.com",
+    "primary_phone": "+918765432109",
+    "headline": "Software Engineer",
+    "city": "Hyderabad",
+    "country": "IN",
+    "years_experience": 0,
+    "skills": [
+      "Java",
+      "Go",
+      "Kubernetes",
+      "Google Cloud"
+    ],
+    "profile_confidence": 0.5558
+  },
+  {
+    "name": "Aisha Khan",
+    "primary_email": "aisha.khan@yahoo.com",
+    "headline": "Data Scientist",
+    "city": "Mumbai",
+    "country": "IN",
+    "years_experience": 0,
+    "skills": [
+      "Python",
+      "scikit-learn",
+      "TensorFlow",
+      "SQL"
+    ],
+    "profile_confidence": 0.4675
+  },
+  {
+    "years_experience": 0,
+    "profile_confidence": 0.0409
+  }
+]
